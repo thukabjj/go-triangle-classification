@@ -17,6 +17,7 @@ type TriangleTypeClassifierUseCaseImpl struct {
 
 func (t *TriangleTypeClassifierUseCaseImpl) Execute(triangle *domain.Triangle) domain.TriangleType {
 	triangleType := triangle.IdentifyTriangleType()
+	triangle.TriangleType = triangleType
 	xxx := t.TriangleRepository.Store(triangle)
 	fmt.Println(xxx)
 	return triangleType
