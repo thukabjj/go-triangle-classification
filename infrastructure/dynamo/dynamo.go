@@ -1,7 +1,7 @@
 package infrastructure
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -30,7 +30,7 @@ func NewConnectorDynamoDb() *ConnectorDynamoDb {
 	})
 
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("Got error on creating DynamoDB session connector: %s", err.Error())
 	}
 
 	svc := dynamodb.New(session)
@@ -47,9 +47,9 @@ func (c *ConnectorDynamoDb) ListTables() (*dynamodb.ListTablesOutput, error) {
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
 			case dynamodb.ErrCodeInternalServerError:
-				fmt.Println(dynamodb.ErrCodeInternalServerError, aerr.Error())
+				log.Fatalf("Got error on listing tables DynamoDB: %s -  %s", dynamodb.ErrCodeInternalServerError, aerr.Error())
 			default:
-				fmt.Println(aerr.Error())
+				log.Fatalf("Unexpected Dynamodb error: %s", aerr.Error())
 			}
 			return nil, err
 		}

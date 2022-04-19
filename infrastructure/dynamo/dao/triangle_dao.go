@@ -1,14 +1,12 @@
 package dao
 
 import (
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"github.com/rs/xid"
+	"github.com/google/uuid"
 	"github.com/thukabjj/go-triangle-classification/domain"
 	infrastructure "github.com/thukabjj/go-triangle-classification/infrastructure/dynamo"
 )
@@ -39,12 +37,12 @@ func NewTriangleDAO(connectorDynamoDb *infrastructure.ConnectorDynamoDb) *Triang
 			if *n == tableName {
 				shouldCreateTables = false
 			}
-			fmt.Println("Table ", tableName, "Already Exists: ")
+			log.Printf("Table %s already exists!", tableName)
 		}
 
 	} else {
 		shouldCreateTables = false
-		fmt.Println(err.Error())
+		log.Fatalf("Got error calling ListTables: %s", err.Error())
 	}
 
 	if shouldCreateTables {
@@ -79,16 +77,16 @@ func createTable(connectorDynamoDb *infrastructure.ConnectorDynamoDb) {
 
 	_, err := connectorDynamoDb.Dynamodb.CreateTable(input)
 	if err != nil {
-		log.Fatalf("Got error calling CreateTable: %s", err)
+		log.Fatalf("Got error calling CreateTable: %s", err.Error())
 	}
 
-	fmt.Println("Created the table", tableName)
+	log.Printf("Table %s was created!", tableName)
 }
 
 func (t *TriangleDao) Store(triangle *domain.Triangle) *domain.Triangle {
 
 	triangleEntity := TriangleEntity{
-		ID:           xid.New().String(),
+		ID:           uuid.New().String(),
 		SideA:        triangle.SideA,
 		SideB:        triangle.SideB,
 		SideC:        triangle.SideC,
@@ -98,9 +96,8 @@ func (t *TriangleDao) Store(triangle *domain.Triangle) *domain.Triangle {
 	av, err := dynamodbattribute.MarshalMap(triangleEntity)
 
 	if err != nil {
-		fmt.Println("Got error calling MarshalMap:")
-		fmt.Println(err.Error())
-		os.Exit(1)
+		log.Fatalf("Got error calling MarshalMap: %s", err.Error())
+		return nil
 	}
 
 	input := &dynamodb.PutItemInput{
@@ -111,9 +108,8 @@ func (t *TriangleDao) Store(triangle *domain.Triangle) *domain.Triangle {
 	_, err = t.ConnectorDynamoDb.Dynamodb.PutItem(input)
 
 	if err != nil {
-		fmt.Println("Got error calling Insert on Table:")
-		fmt.Println(err.Error())
-		os.Exit(1)
+		log.Fatalf("Got error calling Insert on Table: %s", err.Error())
+		return nil
 	}
 	triangle.ID = triangleEntity.ID
 	return triangle
