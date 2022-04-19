@@ -6,6 +6,7 @@ require (
 	github.com/aws/aws-sdk-go v1.43.41
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-playground/validator/v10 v10.10.1
+	github.com/rs/xid v1.4.0
 	github.com/swaggo/gin-swagger v1.4.2
 	github.com/swaggo/swag v1.8.1
 )

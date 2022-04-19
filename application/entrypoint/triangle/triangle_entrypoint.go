@@ -16,18 +16,14 @@ type TriangleEntrypointImpl struct {
 	TriangleTypeClassifierUseCase classifier.TriangleTypeClassifierUseCase
 }
 
-// Paths Information
-
-// TypeIdentifier godoc
-// @Summary Create new videos
-// @Description Create a new video
-// @Tags videos,create
-// @Accept  json
+// Upload example
+// @Summary Upload file
+// @Description Upload file
+// @ID file.upload
+// @Accept  multipart/form-data
 // @Produce  json
-// @Param video body entity.TriangleEntrypointRequest true "Create video"
-// @Success 200 {object} entity.TriangleEntrypointResponse
-// @Failure 400 {object} middleware.Error
-// @Failure 401 {object} middleware.Error
+// @Param   file formData file true  "this is a test file"
+// @Success 200 {string} string "ok"
 // @Router /api/triangle/v1/classifier [post]
 
 func (t *TriangleEntrypointImpl) TypeIdentifier(ctx *gin.Context) {

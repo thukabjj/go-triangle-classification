@@ -6,6 +6,8 @@ import (
 	"github.com/thukabjj/go-triangle-classification/application/entrypoint/entity"
 	"github.com/thukabjj/go-triangle-classification/application/entrypoint/triangle"
 	"github.com/thukabjj/go-triangle-classification/application/middleware"
+	infrastructure "github.com/thukabjj/go-triangle-classification/infrastructure/dynamo"
+	"github.com/thukabjj/go-triangle-classification/infrastructure/dynamo/dao"
 	"github.com/thukabjj/go-triangle-classification/usercase/triangle/classifier"
 )
 
@@ -16,24 +18,26 @@ func Run() {
 
 	r.Use(gin.Recovery(), gin.Logger(), middleware.ErrorHandler)
 
-	entrypoint.Routes(r, buildHandlers())
+	dynamoDbConnector := infrastructure.NewConnectorDynamoDb()
+
+	entrypoint.Routes(r, buildHandlers(dynamoDbConnector))
 
 	r.Run()
 }
 
-func buildHandlers() *entity.Handlers {
-	triangle := InjectTriangleEntrypoint()
+func buildHandlers(dynamoDbConnector *infrastructure.ConnectorDynamoDb) *entity.Handlers {
+	triangle := InjectTriangleEntrypoint(dynamoDbConnector)
 	handlers := &entity.Handlers{
 		TriangleEntrypoint: triangle,
 	}
 	return handlers
 }
 
-func InjectTriangleEntrypoint() triangle.TriangleEntrypoint {
+func InjectTriangleEntrypoint(dynamoDbConnector *infrastructure.ConnectorDynamoDb) triangle.TriangleEntrypoint {
 
 	triangle := &triangle.TriangleEntrypointImpl{
 		TriangleTypeClassifierUseCase: &classifier.TriangleTypeClassifierUseCaseImpl{
-			TriangleRepository: NewDynamoDbRepo(),
+			TriangleRepository: dao.NewTriangleDAO(dynamoDbConnector),
 		},
 	}
 	return triangle
