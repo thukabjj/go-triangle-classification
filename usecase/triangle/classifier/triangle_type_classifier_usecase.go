@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/thukabjj/go-triangle-classification/domain"
-	repository "github.com/thukabjj/go-triangle-classification/usercase/gateway/repository/triangle"
+	repository "github.com/thukabjj/go-triangle-classification/usecase/gateway/repository/triangle"
 )
 
 type TriangleTypeClassifierUseCase interface {

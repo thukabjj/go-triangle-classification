@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/thukabjj/go-triangle-classification/application/entrypoint/triangle/entity"
 	"github.com/thukabjj/go-triangle-classification/domain"
-	"github.com/thukabjj/go-triangle-classification/usercase/triangle/classifier"
+	"github.com/thukabjj/go-triangle-classification/usecase/triangle/classifier"
 )
 
 type TriangleEntrypoint interface {
@@ -15,16 +15,6 @@ type TriangleEntrypoint interface {
 type TriangleEntrypointImpl struct {
 	TriangleTypeClassifierUseCase classifier.TriangleTypeClassifierUseCase
 }
-
-// Upload example
-// @Summary Upload file
-// @Description Upload file
-// @ID file.upload
-// @Accept  multipart/form-data
-// @Produce  json
-// @Param   file formData file true  "this is a test file"
-// @Success 200 {string} string "ok"
-// @Router /api/triangle/v1/classifier [post]
 
 func (t *TriangleEntrypointImpl) TypeIdentifier(ctx *gin.Context) {
 	request := &entity.TriangleEntrypointRequest{}

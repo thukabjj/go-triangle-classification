@@ -3,12 +3,15 @@ package infrastructure
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/thukabjj/go-triangle-classification/application/entrypoint"
+	"github.com/thukabjj/go-triangle-classification/application/entrypoint/authentication"
 	"github.com/thukabjj/go-triangle-classification/application/entrypoint/entity"
+	authenticationUserCase "github.com/thukabjj/go-triangle-classification/usecase/authentication"
+
 	"github.com/thukabjj/go-triangle-classification/application/entrypoint/triangle"
 	"github.com/thukabjj/go-triangle-classification/application/middleware"
 	infrastructure "github.com/thukabjj/go-triangle-classification/infrastructure/dynamo"
 	"github.com/thukabjj/go-triangle-classification/infrastructure/dynamo/dao"
-	"github.com/thukabjj/go-triangle-classification/usercase/triangle/classifier"
+	"github.com/thukabjj/go-triangle-classification/usecase/triangle/classifier"
 )
 
 func Run() {
@@ -29,6 +32,9 @@ func buildHandlers(dynamoDbConnector *infrastructure.ConnectorDynamoDb) *entity.
 	triangle := InjectTriangleEntrypoint(dynamoDbConnector)
 	handlers := &entity.Handlers{
 		TriangleEntrypoint: triangle,
+		AuthenticationEntrypoint: &authentication.AuthenticationEntrypointImpl{
+			AuthenticationUseCase: &authenticationUserCase.AuthenticationUseCaseImpl{},
+		},
 	}
 	return handlers
 }
