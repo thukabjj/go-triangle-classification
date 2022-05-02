@@ -11,6 +11,7 @@ import (
 var USERNAME = "triangle"
 var PASSWORD = GeneratehashPassword("classification")
 var EXPIRATION_TIME = time.Now().Add(time.Minute * 5).Unix()
+var users = map[string]string{USERNAME: PASSWORD}
 
 type AuthenticationUseCase interface {
 	Authenticate(username string, password string) (*entity.AuthenticationEntity, error)
@@ -20,9 +21,7 @@ type AuthenticationUseCaseImpl struct{}
 
 func (c *AuthenticationUseCaseImpl) Authenticate(username string, password string) (*entity.AuthenticationEntity, error) {
 
-	passwordEncrypted := GeneratehashPassword(password)
-
-	if username != USERNAME && passwordEncrypted != PASSWORD {
+	if users[username] == "" || !CheckPasswordHash(password, users[username]) {
 		return nil, &entity.NotAuthorizedError{}
 	}
 
@@ -54,4 +53,9 @@ func (c *AuthenticationUseCaseImpl) Authenticate(username string, password strin
 func GeneratehashPassword(password string) string {
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes)
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
