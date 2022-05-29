@@ -9,7 +9,7 @@ import (
 )
 
 var USERNAME = "triangle"
-var PASSWORD = GeneratehashPassword("classification")
+var PASSWORD = generatedHashPassword("classification")
 var EXPIRATION_TIME = time.Now().Add(time.Minute * 5).Unix()
 
 type AuthenticationUseCase interface {
@@ -20,9 +20,7 @@ type AuthenticationUseCaseImpl struct{}
 
 func (c *AuthenticationUseCaseImpl) Authenticate(username string, password string) (*entity.AuthenticationEntity, error) {
 
-	passwordEncrypted := GeneratehashPassword(password)
-
-	if username != USERNAME && passwordEncrypted != PASSWORD {
+	if username != USERNAME && compareHashAndPassword(PASSWORD, password) {
 		return nil, &entity.NotAuthorizedError{}
 	}
 
@@ -51,7 +49,11 @@ func (c *AuthenticationUseCaseImpl) Authenticate(username string, password strin
 
 }
 
-func GeneratehashPassword(password string) string {
+func generatedHashPassword(password string) string {
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes)
+}
+
+func compareHashAndPassword(passwordEncrypted string, password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(passwordEncrypted), []byte(password)) == nil
 }
