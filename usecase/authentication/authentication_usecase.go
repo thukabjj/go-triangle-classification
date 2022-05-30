@@ -3,7 +3,7 @@ package authentication
 import (
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/thukabjj/go-triangle-classification/domain/authentication"
 	"github.com/thukabjj/go-triangle-classification/usecase/authentication/entity"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -13,38 +13,27 @@ var PASSWORD = generatedHashPassword("classification")
 var EXPIRATION_TIME = time.Now().Add(time.Minute * 5).Unix()
 
 type AuthenticationUseCase interface {
-	Authenticate(username string, password string) (*entity.AuthenticationEntity, error)
+	Authenticate(username string, password string) (*authentication.Authentication, error)
 }
 
-type AuthenticationUseCaseImpl struct{}
+type AuthenticationUseCaseImpl struct {
+	JwtToken JwtToken
+}
 
-func (c *AuthenticationUseCaseImpl) Authenticate(username string, password string) (*entity.AuthenticationEntity, error) {
+func (c *AuthenticationUseCaseImpl) Authenticate(username string, password string) (*authentication.Authentication, error) {
 
-	if username != USERNAME && compareHashAndPassword(PASSWORD, password) {
+	credentialsIsValid := c.JwtToken.ValidateCredentials(username, password)
+
+	if !credentialsIsValid {
 		return nil, &entity.NotAuthorizedError{}
 	}
 
-	var mySigningKey = []byte("secretkey")
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-
-	claims["authorized"] = true
-	claims["username"] = username
-	claims["role"] = "ADMIN"
-	claims["exp"] = EXPIRATION_TIME
-
-	tokenString, err := token.SignedString(mySigningKey)
+	authenticatedToken, err := c.JwtToken.GenerateToken(username, password)
 
 	if err != nil {
 		return nil, err
 	}
 
-	authenticatedToken := &entity.AuthenticationEntity{
-		Username:       USERNAME,
-		Token:          tokenString,
-		Type:           entity.AuthenticationTypeBearer,
-		ExpirationTime: EXPIRATION_TIME,
-	}
 	return authenticatedToken, nil
 
 }

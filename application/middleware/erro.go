@@ -6,12 +6,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/thukabjj/go-triangle-classification/usecase/authentication/entity"
 )
 
 type Error struct {
 	Code    int               `json:"code"`
 	Status  string            `json:"status"`
-	Datails map[string]string `json:"datails"`
+	Details map[string]string `json:"datails"`
 }
 
 type Errors struct {
@@ -25,6 +26,8 @@ func ErrorHandler(c *gin.Context) {
 
 	for _, err := range c.Errors {
 		var ve validator.ValidationErrors
+		var na entity.NotAuthorizedError
+
 		if errors.As(err, &ve) {
 
 			response.Code = http.StatusUnprocessableEntity
@@ -33,11 +36,17 @@ func ErrorHandler(c *gin.Context) {
 			for _, fe := range ve {
 				me[fe.Field()] = getErrorMsg(fe)
 			}
-			response.Datails = me
+			response.Details = me
 			c.JSON(response.Code, response)
 
 		}
 
+		if errors.Is(err.Err, &na) {
+			response.Code = http.StatusUnauthorized
+			response.Status = http.StatusText(http.StatusUnauthorized)
+			response.Details = map[string]string{"error": err.Err.Error()}
+		}
+		c.JSON(response.Code, response)
 	}
 
 }

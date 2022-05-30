@@ -11,6 +11,7 @@ import (
 	"github.com/thukabjj/go-triangle-classification/application/middleware"
 	infrastructure "github.com/thukabjj/go-triangle-classification/infrastructure/dynamo"
 	"github.com/thukabjj/go-triangle-classification/infrastructure/dynamo/dao"
+	"github.com/thukabjj/go-triangle-classification/infrastructure/jwt"
 	"github.com/thukabjj/go-triangle-classification/usecase/triangle/classifier"
 )
 
@@ -33,7 +34,9 @@ func buildHandlers(dynamoDbConnector *infrastructure.ConnectorDynamoDb) *entity.
 	handlers := &entity.Handlers{
 		TriangleEntrypoint: triangle,
 		AuthenticationEntrypoint: &authentication.AuthenticationEntrypointImpl{
-			AuthenticationUseCase: &authenticationUserCase.AuthenticationUseCaseImpl{},
+			AuthenticationUseCase: &authenticationUserCase.AuthenticationUseCaseImpl{
+				JwtToken: &jwt.JwtTokenImpl{},
+			},
 		},
 	}
 	return handlers
