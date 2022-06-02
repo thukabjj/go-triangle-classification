@@ -1,19 +1,19 @@
 package authentication
 
 import (
-	"github.com/thukabjj/go-triangle-classification/domain/authentication"
+	"github.com/thukabjj/go-triangle-classification/domain"
 	"github.com/thukabjj/go-triangle-classification/usecase/authentication/entity"
 )
 
 type AuthenticationUseCase interface {
-	Authenticate(username string, password string) (*authentication.Authentication, error)
+	Authenticate(username string, password string) (*domain.Authentication, error)
 }
 
 type AuthenticationUseCaseImpl struct {
 	JwtToken JwtToken
 }
 
-func (c *AuthenticationUseCaseImpl) Authenticate(username string, password string) (*authentication.Authentication, error) {
+func (c *AuthenticationUseCaseImpl) Authenticate(username string, password string) (*domain.Authentication, error) {
 
 	credentialsIsValid := c.JwtToken.ValidateCredentials(username, password)
 

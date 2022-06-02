@@ -6,21 +6,17 @@ const (
 	TriangleTypeEquilateral TriangleType = "equilateral"
 	TriangleTypeIsosceles   TriangleType = "isosceles"
 	TriangleTypeScalene     TriangleType = "scalene"
-	TriangleTypeUndefined   TriangleType = "undefined"
 )
 
 func (t TriangleType) GetTriangleType(typeTriangle string) string {
 	switch typeTriangle {
 
-	case string(TriangleTypeEquilateral):
-		return string(TriangleTypeEquilateral)
 	case string(TriangleTypeIsosceles):
 		return string(TriangleTypeIsosceles)
 	case string(TriangleTypeScalene):
 		return string(TriangleTypeScalene)
 	default:
-		return string(TriangleTypeUndefined)
-
+		return string(TriangleTypeEquilateral)
 	}
 }
 

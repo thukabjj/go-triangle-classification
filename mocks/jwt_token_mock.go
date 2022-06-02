@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	authentication "github.com/thukabjj/go-triangle-classification/domain/authentication"
+	domain "github.com/thukabjj/go-triangle-classification/domain"
 )
 
 // MockJwtToken is a mock of JwtToken interface.
@@ -35,10 +35,10 @@ func (m *MockJwtToken) EXPECT() *MockJwtTokenMockRecorder {
 }
 
 // GenerateToken mocks base method.
-func (m *MockJwtToken) GenerateToken(username, password string) (*authentication.Authentication, error) {
+func (m *MockJwtToken) GenerateToken(username, password string) (*domain.Authentication, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GenerateToken", username, password)
-	ret0, _ := ret[0].(*authentication.Authentication)
+	ret0, _ := ret[0].(*domain.Authentication)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

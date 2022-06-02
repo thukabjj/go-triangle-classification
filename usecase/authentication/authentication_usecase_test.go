@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-playground/assert/v2"
 	"github.com/golang/mock/gomock"
-	"github.com/thukabjj/go-triangle-classification/domain/authentication"
+	"github.com/thukabjj/go-triangle-classification/domain"
 	"github.com/thukabjj/go-triangle-classification/mocks"
 )
 
@@ -23,10 +23,10 @@ func Test_Authenticate(t *testing.T) {
 		JwtToken: jwtTokenMocked,
 	}
 
-	expected := &authentication.Authentication{
+	expected := &domain.Authentication{
 		Username:       "triangle",
 		Token:          "klsnlksnklsnalsllaL",
-		Type:           authentication.AuthenticationTypeBearer,
+		Type:           domain.AuthenticationTypeBearer,
 		ExpirationTime: 3600,
 	}
 
@@ -56,10 +56,10 @@ func TestAuthenticationUseCaseImpl_Authenticate(t *testing.T) {
 		JwtToken: jwtTokenMocked,
 	}
 
-	expected := &authentication.Authentication{
+	expected := &domain.Authentication{
 		Username:       "triangle",
 		Token:          "klsnlksnklsnalsllaL",
-		Type:           authentication.AuthenticationTypeBearer,
+		Type:           domain.AuthenticationTypeBearer,
 		ExpirationTime: 3600,
 	}
 
@@ -81,7 +81,7 @@ func TestAuthenticationUseCaseImpl_Authenticate(t *testing.T) {
 		name    string
 		c       *AuthenticationUseCaseImpl
 		args    args
-		want    *authentication.Authentication
+		want    *domain.Authentication
 		wantErr bool
 	}{
 		{"Should return JWT Token with success!", AuthenticationUseCase, args{username, password}, expected, false},

@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/thukabjj/go-triangle-classification/domain/authentication"
+	"github.com/thukabjj/go-triangle-classification/domain"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,7 +18,7 @@ func (j *JwtTokenImpl) ValidateCredentials(username string, password string) boo
 	return username == USERNAME && compareHashAndPassword(PASSWORD, password)
 }
 
-func (j *JwtTokenImpl) GenerateToken(username string, password string) (*authentication.Authentication, error) {
+func (j *JwtTokenImpl) GenerateToken(username string, password string) (*domain.Authentication, error) {
 	var mySigningKey = []byte("secretkey")
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
@@ -34,10 +34,10 @@ func (j *JwtTokenImpl) GenerateToken(username string, password string) (*authent
 		return nil, err
 	}
 
-	authenticatedToken := &authentication.Authentication{
+	authenticatedToken := &domain.Authentication{
 		Username:       USERNAME,
 		Token:          tokenString,
-		Type:           authentication.AuthenticationTypeBearer,
+		Type:           domain.AuthenticationTypeBearer,
 		ExpirationTime: EXPIRATION_TIME,
 	}
 	return authenticatedToken, nil
