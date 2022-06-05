@@ -16,6 +16,15 @@ type TriangleEntrypointImpl struct {
 	TriangleTypeClassifierUseCase classifier.TriangleTypeClassifierUseCase
 }
 
+// PostTriangleIdentify             godoc
+// @Summary      Identify a tiangle type
+// @Description  Takes the triangle request JSON and identifies the triangle's type, and stores it in DB. Return saved JSON.
+// @Tags         triangle
+// @Produce      json
+// @Param 	   	 Authorization	 header 	string 	true 	"JWT Token"
+// @Param        TraingleRequest body      entity.TriangleEntrypointRequest  true  "TriangleEntrypointRequest JSON information"
+// @Success      200   {object}  entity.TriangleEntrypointResponse
+// @Router       /api/triangle/v1/classifier [post]
 func (t *TriangleEntrypointImpl) TypeIdentifier(ctx *gin.Context) {
 	request := &entity.TriangleEntrypointRequest{}
 

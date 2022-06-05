@@ -1,0 +1,112 @@
+basePath: /
+definitions:
+  entity.AuthenticationEntrypointResponse:
+    properties:
+      expirationTime:
+        type: integer
+      token:
+        type: string
+      type:
+        type: string
+      username:
+        type: string
+    type: object
+  entity.TriangleEntrypointRequest:
+    properties:
+      sideA:
+        type: number
+      sideB:
+        type: number
+      sideC:
+        type: number
+    required:
+    - sideA
+    - sideB
+    - sideC
+    type: object
+  entity.TriangleEntrypointResponse:
+    properties:
+      type:
+        type: string
+    type: object
+  middleware.Error:
+    properties:
+      code:
+        type: integer
+      datails:
+        additionalProperties:
+          type: string
+        type: object
+      status:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: arthur.alvesdeveloper@gmail.com
+    name: Arthur Alves
+    url: https://twitter.com/prayformercy_tv
+  description: A triangle management service API in Go using Gin framework.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://www.linkedin.com/in/arthur-alves-da-costa/
+  title: Triangle API
+  version: "1.0"
+paths:
+  /api/triangle/v1/classifier:
+    post:
+      description: Takes the triangle request JSON and identifies the triangle's type,
+        and stores it in DB. Return saved JSON.
+      parameters:
+      - description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: TriangleEntrypointRequest JSON information
+        in: body
+        name: TraingleRequest
+        required: true
+        schema:
+          $ref: '#/definitions/entity.TriangleEntrypointRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.TriangleEntrypointResponse'
+      summary: Identify a tiangle type
+      tags:
+      - triangle
+  /auth/login:
+    post:
+      description: Takes the username and the password from the Header and valid this
+        information. Return JSON with the JWT information.
+      parameters:
+      - description: username
+        in: header
+        name: username
+        required: true
+        type: string
+      - description: password
+        in: header
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: JWT informations
+          schema:
+            $ref: '#/definitions/entity.AuthenticationEntrypointResponse'
+        "401":
+          description: User not authorized!
+          schema:
+            $ref: '#/definitions/middleware.Error'
+      summary: Make the authentication of an username
+      tags:
+      - authentication
+swagger: "2.0"

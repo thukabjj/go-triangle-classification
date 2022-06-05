@@ -15,6 +15,16 @@ type AuthenticationEntrypointImpl struct {
 	AuthenticationUseCase authentication.AuthenticationUseCase
 }
 
+// PostAuthentication             godoc
+// @Summary      Make the authentication of an username
+// @Description  Takes the username and the password from the Header and valid this information. Return JSON with the JWT information.
+// @Tags         authentication
+// @Produce      json
+// @Param        username  header      string  true  "username"
+// @Param        password  header      string  true  "password"
+// @Success      201   {object}  entity.AuthenticationEntrypointResponse "JWT informations"
+// @Failure      401   {object}  middleware.Error "User not authorized!"
+// @Router       /auth/login [post]
 func (e *AuthenticationEntrypointImpl) Login(ctx *gin.Context) {
 
 	username := ctx.Request.Header.Get("username")
