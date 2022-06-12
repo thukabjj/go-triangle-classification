@@ -3,6 +3,7 @@ package authentication
 import (
 	"github.com/thukabjj/go-triangle-classification/domain"
 	"github.com/thukabjj/go-triangle-classification/usecase/authentication/entity"
+	"github.com/thukabjj/go-triangle-classification/usecase/gateway/jwt"
 )
 
 type AuthenticationUseCase interface {
@@ -10,7 +11,7 @@ type AuthenticationUseCase interface {
 }
 
 type AuthenticationUseCaseImpl struct {
-	JwtToken JwtToken
+	JwtToken jwt.JwtToken
 }
 
 func (c *AuthenticationUseCaseImpl) Authenticate(username string, password string) (*domain.Authentication, error) {

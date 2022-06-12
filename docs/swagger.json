@@ -16,10 +16,14 @@
         "version": "1.0"
     },
     "host": "localhost:8080",
-    "basePath": "/",
     "paths": {
         "/api/triangle/v1/classifier": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Takes the triangle request JSON and identifies the triangle's type, and stores it in DB. Return saved JSON.",
                 "produces": [
                     "application/json"
@@ -29,13 +33,6 @@
                 ],
                 "summary": "Identify a tiangle type",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "JWT Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "TriangleEntrypointRequest JSON information",
                         "name": "TraingleRequest",
@@ -51,6 +48,18 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/entity.TriangleEntrypointResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authorized!",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.Error"
                         }
                     }
                 }
@@ -160,6 +169,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

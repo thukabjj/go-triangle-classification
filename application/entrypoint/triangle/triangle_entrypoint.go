@@ -1,6 +1,8 @@
 package triangle
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/thukabjj/go-triangle-classification/application/entrypoint/triangle/entity"
@@ -21,15 +23,18 @@ type TriangleEntrypointImpl struct {
 // @Description  Takes the triangle request JSON and identifies the triangle's type, and stores it in DB. Return saved JSON.
 // @Tags         triangle
 // @Produce      json
-// @Param 	   	 Authorization	 header 	string 	true 	"JWT Token"
 // @Param        TraingleRequest body      entity.TriangleEntrypointRequest  true  "TriangleEntrypointRequest JSON information"
+// @Security     ApiKeyAuth
 // @Success      200   {object}  entity.TriangleEntrypointResponse
+// @Failure      401   {object}  middleware.Error "User not authorized!"
+// @Failure      422   {object}  middleware.Error "Unprocessable Entity"
 // @Router       /api/triangle/v1/classifier [post]
 func (t *TriangleEntrypointImpl) TypeIdentifier(ctx *gin.Context) {
 	request := &entity.TriangleEntrypointRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&request, binding.JSON); err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 	triangle := &domain.Triangle{
@@ -42,5 +47,5 @@ func (t *TriangleEntrypointImpl) TypeIdentifier(ctx *gin.Context) {
 		TriangleType: string(triangleType),
 	}
 
-	ctx.JSON(200, response)
+	ctx.JSON(http.StatusOK, response)
 }

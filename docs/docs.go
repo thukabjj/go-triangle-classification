@@ -27,6 +27,11 @@ const docTemplate = `{
     "paths": {
         "/api/triangle/v1/classifier": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Takes the triangle request JSON and identifies the triangle's type, and stores it in DB. Return saved JSON.",
                 "produces": [
                     "application/json"
@@ -36,13 +41,6 @@ const docTemplate = `{
                 ],
                 "summary": "Identify a tiangle type",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "JWT Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "TriangleEntrypointRequest JSON information",
                         "name": "TraingleRequest",
@@ -58,6 +56,18 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/entity.TriangleEntrypointResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authorized!",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.Error"
                         }
                     }
                 }
@@ -168,6 +178,13 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
@@ -175,7 +192,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Triangle API",
 	Description:      "A triangle management service API in Go using Gin framework.",

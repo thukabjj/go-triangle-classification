@@ -1,4 +1,3 @@
-basePath: /
 definitions:
   entity.AuthenticationEntrypointResponse:
     properties:
@@ -59,11 +58,6 @@ paths:
       description: Takes the triangle request JSON and identifies the triangle's type,
         and stores it in DB. Return saved JSON.
       parameters:
-      - description: JWT Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: TriangleEntrypointRequest JSON information
         in: body
         name: TraingleRequest
@@ -77,6 +71,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/entity.TriangleEntrypointResponse'
+        "401":
+          description: User not authorized!
+          schema:
+            $ref: '#/definitions/middleware.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/middleware.Error'
+      security:
+      - ApiKeyAuth: []
       summary: Identify a tiangle type
       tags:
       - triangle
@@ -109,4 +113,9 @@ paths:
       summary: Make the authentication of an username
       tags:
       - authentication
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

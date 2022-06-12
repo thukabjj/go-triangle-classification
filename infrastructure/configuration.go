@@ -8,7 +8,6 @@ import (
 	authenticationUserCase "github.com/thukabjj/go-triangle-classification/usecase/authentication"
 
 	"github.com/thukabjj/go-triangle-classification/application/entrypoint/triangle"
-	"github.com/thukabjj/go-triangle-classification/application/middleware"
 	infrastructure "github.com/thukabjj/go-triangle-classification/infrastructure/dynamo"
 	"github.com/thukabjj/go-triangle-classification/infrastructure/dynamo/dao"
 	"github.com/thukabjj/go-triangle-classification/infrastructure/jwt"
@@ -20,7 +19,7 @@ func Run() {
 
 	r := gin.Default()
 
-	r.Use(gin.Recovery(), gin.Logger(), middleware.ErrorHandler)
+	r.Use(gin.Recovery(), gin.Logger())
 
 	dynamoDbConnector := infrastructure.NewConnectorDynamoDb()
 

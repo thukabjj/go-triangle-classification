@@ -10,7 +10,6 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
-	github.com/santosh/gingo v0.0.0-20220519203742-9b8b0b08c5fe
 	github.com/stretchr/testify v1.7.1
 	github.com/swaggo/gin-swagger v1.4.3
 	github.com/swaggo/swag v1.8.2
