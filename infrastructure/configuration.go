@@ -7,6 +7,7 @@ import (
 	"github.com/thukabjj/go-triangle-classification/application/entrypoint/entity"
 	authenticationUserCase "github.com/thukabjj/go-triangle-classification/usecase/authentication"
 
+	triangleRepository "github.com/thukabjj/go-triangle-classification/application/database/dynamo/triangle"
 	"github.com/thukabjj/go-triangle-classification/application/entrypoint/triangle"
 	infrastructure "github.com/thukabjj/go-triangle-classification/infrastructure/dynamo"
 	"github.com/thukabjj/go-triangle-classification/infrastructure/dynamo/dao"
@@ -45,7 +46,9 @@ func InjectTriangleEntrypoint(dynamoDbConnector *infrastructure.ConnectorDynamoD
 
 	triangle := &triangle.TriangleEntrypointImpl{
 		TriangleTypeClassifierUseCase: &classifier.TriangleTypeClassifierUseCaseImpl{
-			TriangleRepository: dao.NewTriangleDAO(dynamoDbConnector),
+			TriangleRepository: &triangleRepository.TriangleRepositoryImpl{
+				TriangleDao: dao.NewTriangleDAOImpl(dynamoDbConnector),
+			},
 		},
 	}
 	return triangle

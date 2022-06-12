@@ -19,13 +19,13 @@ type TriangleEntity struct {
 	TriangleType string  `json:"triangleType"`
 }
 
-type TriangleDao struct {
+type TriangleDaoImpl struct {
 	ConnectorDynamoDb *infrastructure.ConnectorDynamoDb
 }
 
 const tableName = "Triangle"
 
-func NewTriangleDAO(connectorDynamoDb *infrastructure.ConnectorDynamoDb) *TriangleDao {
+func NewTriangleDAOImpl(connectorDynamoDb *infrastructure.ConnectorDynamoDb) *TriangleDaoImpl {
 
 	result, err := connectorDynamoDb.ListTables()
 
@@ -48,7 +48,7 @@ func NewTriangleDAO(connectorDynamoDb *infrastructure.ConnectorDynamoDb) *Triang
 	if shouldCreateTables {
 		createTable(connectorDynamoDb)
 	}
-	return &TriangleDao{
+	return &TriangleDaoImpl{
 		ConnectorDynamoDb: connectorDynamoDb,
 	}
 }
@@ -83,7 +83,7 @@ func createTable(connectorDynamoDb *infrastructure.ConnectorDynamoDb) {
 	log.Printf("Table %s was created!", tableName)
 }
 
-func (t *TriangleDao) Store(triangle *domain.Triangle) *domain.Triangle {
+func (t *TriangleDaoImpl) Save(triangle *domain.Triangle) *domain.Triangle {
 
 	triangleEntity := TriangleEntity{
 		ID:           uuid.New().String(),
